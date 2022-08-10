@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public User getById (long id) {
+    public User getById(long id) {
         return userRepository.getById(id);
     }
 
@@ -31,20 +31,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void add (User user) {
+    public void add(User user) {
         userRepository.save(user);
     }
 
     @Transactional
-    public void delete (long id) {
+    public void delete(long id) {
         userRepository.deleteById(id);
     }
 
-    @Transactional
-    public void userUpdate (long id, User userUpdate) {
-        User userUpd = getById(id);
-        userUpd.setName(userUpdate.getName());
-        userUpd.setLastName(userUpdate.getLastName());
-        userUpd.setAge(userUpdate.getAge());
+    public User findById(long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

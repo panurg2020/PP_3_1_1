@@ -4,66 +4,46 @@ import com.katastudy.app.model.User;
 import com.katastudy.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    ModelAndView modelAndView = new ModelAndView();
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public ModelAndView allUsers() {
-        List<User> users = userService.allUsers();
-        modelAndView.setViewName("user-list");
-        modelAndView.addObject("users", users);
-        return modelAndView;
+    @GetMapping()
+    public String index(Model model) {
+        model.addAttribute("users", userService.allUsers());
+        return "index";
     }
-
-    @RequestMapping(value = "/user-create", method = RequestMethod.GET)
-    public ModelAndView addUserForm(User user) {
-        modelAndView.setViewName("user-create");
-        return modelAndView;
+    @GetMapping("/create")
+    public String createUserForm(User user) {
+        return "create";
     }
-
-    @RequestMapping(value = "/user-create", method = RequestMethod.POST)
-    public ModelAndView createUser(@ModelAttribute("user") User user) {
-        modelAndView.setViewName("redirect:/users");
+    @PostMapping()
+    public String createUser(User user) {
         userService.add(user);
-        return modelAndView;
+        return "redirect:/users";
     }
-
-    @RequestMapping(value = "user-delete/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteUser(@PathVariable("id") long id) {
-        User user = userService.getById(id);
-        modelAndView.setViewName("redirect:/users");
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
-        return modelAndView;
+        return "redirect:/users";
     }
-
-    @RequestMapping(value = "/user-update/{id}", method = RequestMethod.GET)
-    public ModelAndView updateUserForm(@PathVariable("id") long id) {
-        User user = userService.getById(id);
-        modelAndView.setViewName("user-update");
-        modelAndView.addObject("user", user);
-        return modelAndView;
+    @GetMapping("/{id}/edit")
+    public String editUserForm(Model model, @PathVariable("id") long id) {
+        model.addAttribute("user", userService.findById(id));
+        return "edit";
     }
-
-    @RequestMapping(value = "/user-update", method = RequestMethod.POST)
-    public ModelAndView updateUser(@ModelAttribute("user") User user) {
-        modelAndView.setViewName("redirect:/users");
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
         userService.add(user);
-        return modelAndView;
+        return "redirect:/users";
     }
 }
