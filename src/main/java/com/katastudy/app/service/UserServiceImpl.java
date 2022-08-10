@@ -20,12 +20,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-
-    public User getById(long id) {
-        return userRepository.getById(id);
-    }
-
-
     public List<User> allUsers() {
         return userRepository.findAll();
     }
