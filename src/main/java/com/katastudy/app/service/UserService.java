@@ -1,18 +1,17 @@
 package com.katastudy.app.service;
 
 import com.katastudy.app.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService  {
 
-    User getById (long id);
-
-    List<User> allUsers();
-
-    void add (User user);
-
-    void delete (long id);
-
-    void userUpdate (long id, User userUpdate);
+    List <User> getAllUsers();
+    void saveUser(User user);
+    User getUserById(Long id);
+    void deleteUserById(Long id);
+    UserDetails loadUserByUsername(String email);
+    void editUser(User user);
 }
