@@ -13,6 +13,7 @@ import com.katastudy.app.model.User;
 import java.security.Principal;
 
 @Controller
+@RequestMapping("/admin")
 public class mainController {
     private UserService userService;
     private RoleRepository roleRepository;
@@ -33,12 +34,12 @@ public class mainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-   // @GetMapping("/")
-  //  public String welcomeUsers() {
-   //     return "login";
+  //  @GetMapping("/")
+   // public String welcomeUsers() {
+   //     return "/admin/user-list";
    // }
 
-    @GetMapping("/")
+    @GetMapping("/users")
     public String getUsers(Model model) {
         model.addAttribute("list", userService.listUsers());
         return "admin/user-list";
@@ -76,7 +77,7 @@ public class mainController {
         return "admin/create";
     }
 
-    @PostMapping()
+    @PostMapping("/add")
     public String userCreate(@ModelAttribute("user") User user, @RequestParam(value = "role") String role) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userService.findRolesByName(role));
