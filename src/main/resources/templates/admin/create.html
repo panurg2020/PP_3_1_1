@@ -43,7 +43,7 @@
                     <div class="p-0 col-10">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" th:href="@{/templates/admin}">Users table</a>
+                                <a class="nav-link" data-toggle="tab" th:href="@{/admin}">Users table</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab">New user</a>
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="form-group fw-bold">
                                     <label for="username">Username</label>
-                                    <input th:name="username" th:type="number" min="0" max="127" class="form-control"
+                                    <input th:name="username" th:type="text" class="form-control"
                                            id="username" placeholder="Enter username">
                                 </div>
                                 <div class="form-group fw-bold">

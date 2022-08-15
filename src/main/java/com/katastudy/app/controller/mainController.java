@@ -13,7 +13,7 @@ import com.katastudy.app.model.User;
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/")
 public class mainController {
     private UserService userService;
     private RoleRepository roleRepository;
@@ -34,37 +34,33 @@ public class mainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-  //  @GetMapping("/")
-   // public String welcomeUsers() {
-   //     return "/admin/user-list";
-   // }
 
-    @GetMapping("/users")
+    @GetMapping("/")
     public String getUsers(Model model) {
         model.addAttribute("list", userService.listUsers());
         return "admin/user-list";
     }
 
-    @GetMapping("/user/{id}")
-    public String userPage(Model model, @PathVariable("id") long id) {
-        model.addAttribute("user", userService.getUser(id));
-        return "user";
-    }
+   // @GetMapping("/user/{id}")
+   // public String userPage(Model model, @PathVariable("id") long id) {
+   //     model.addAttribute("user", userService.getUser(id));
+  //      return "user";
+  //  }
 
-    @GetMapping("/user")
-    public String userPageForName(Model model, Principal principal) {
+    @GetMapping("/{id}")
+    public String userPageForName(Model model, Principal principal, @PathVariable Long id) {
         User user = userService.findByUsername(principal.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         model.addAttribute("user", user);
         return "user";
     }
 
-    @GetMapping("/admin")
-    public String adminPageForName(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
-        model.addAttribute("user", user);
-        return "admin/userInAdmin";
-    }
+   // @GetMapping("/admin")
+   // public String adminPageForName(Model model, Principal principal) {
+    //    User user = userService.findByUsername(principal.getName());
+    //    model.addAttribute("user", user);
+    //    return "admin/userInAdmin";
+   // }
 
     @GetMapping("/add")
     public String newUser(Model model) {
@@ -85,25 +81,25 @@ public class mainController {
         return "redirect:/admin/user-list";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/edit")
     public String edit(Model model, @PathVariable("id") long id) {
         model.addAttribute("roles", userService.listRoles());
         model.addAttribute("user", userService.getUser(id));
-        return "admin/edit";
+        return "admin/userInAdmin";
     }
 
-    @PatchMapping("/edit/{id}")
+    @PatchMapping("/{id}/edit")
     public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") long id, @RequestParam(value = "role") String role) {
         user.setRoles(userService.findRolesByName(role));
         userService.updateUser(user);
-        return "redirect:/admin/user-list";
+        return "redirect:/admin";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable("id") long id) {
         userService.deleteUser(id);
-        return "redirect:/user-list";
+        return "redirect:/admin";
     }
 }
 
