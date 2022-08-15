@@ -33,20 +33,17 @@ public class mainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // загрузка главной страницы
     @GetMapping("/")
     public String welcomeUsers() {
         return "index";
     }
 
-    // загрузка страницы пользователей
     @GetMapping("/users")
     public String getUsers(Model model) {
         model.addAttribute("list", userService.listUsers());
         return "admin/user-list";
     }
 
-    // загрузка личной страницы пользователя
     @GetMapping("/user/{id}")
     public String userPage(Model model, @PathVariable("id") long id) {
         model.addAttribute("user", userService.getUser(id));
@@ -68,7 +65,6 @@ public class mainController {
         return "admin/userInAdmin";
     }
 
-    // создание пользователя
     @GetMapping("/add")
     public String newUser(Model model) {
         if (userService.listRoles().isEmpty()) {
@@ -88,7 +84,6 @@ public class mainController {
         return "redirect:/admin/user-list";
     }
 
-    //редактирование пользователя
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable("id") long id) {
         model.addAttribute("roles", userService.listRoles());
@@ -104,7 +99,6 @@ public class mainController {
         return "redirect:/admin/user-list";
     }
 
-    //удаление пользователя
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id) {
         userService.deleteUser(id);
