@@ -33,12 +33,12 @@ public class mainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/")
-    public String welcomeUsers() {
-        return "index";
-    }
+   // @GetMapping("/")
+  //  public String welcomeUsers() {
+   //     return "login";
+   // }
 
-    @GetMapping("/users")
+    @GetMapping("/")
     public String getUsers(Model model) {
         model.addAttribute("list", userService.listUsers());
         return "admin/user-list";
@@ -68,8 +68,8 @@ public class mainController {
     @GetMapping("/add")
     public String newUser(Model model) {
         if (userService.listRoles().isEmpty()) {
-            roleRepository.save(new Role("ROLE_ADMIN"));
-            roleRepository.save(new Role("ROLE_USER"));
+            roleRepository.save(new Role("ADMIN"));
+            roleRepository.save(new Role("USER"));
         }
         model.addAttribute("user", new User());
         model.addAttribute("roles", userService.listRoles());
