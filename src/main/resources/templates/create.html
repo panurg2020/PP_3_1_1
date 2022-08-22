@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>New user</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/}" th:object="${user}" >
+    <div>
+        <label for="name">Name</label>
+        <div>
+            <input type="text" th:field="*{name}" id="name">
+        </div>
+    </div>
+    <div>
+        <label for="surname">Surname</label>
+        <div>
+            <input type="text" th:field="*{surname}" id="surname">
+        </div>
+    </div>
+    <div>
+        <label for="username">Username</label>
+        <div>
+            <input type="text" th:field="*{username}" id="username">
+        </div>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <div>
+            <input type="text" th:field="*{password}" id="password">
+        </div>
+    </div>
+    <div>
+        <label >Role</label>
+        <div>
+            <th:block th:each="role: ${allRoles}">
+                <input type="checkbox" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}" />
+            </th:block>
+        </div>
+    </div>
+    <br/>
+    <input type="submit" value="Create"/>
+</form>
+</body>
+</html>

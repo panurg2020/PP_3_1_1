@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"  >
+    <head>
+    <title>Spring Security test app</title>
+</head>
+<body>
+<h1>User data</h1>
+<h2>Registered user: <b th:text="${#request.userPrincipal.principal.username}"></b></h2>
+<h2>Name: <b th:text="${#request.userPrincipal.principal.name}"></b></h2>
+<h2>Surname: <b th:text="${#request.userPrincipal.principal.surname}"></b></h2>
+
+<a th:href="@{logout}">Logout</a>
+</body>
+</html>

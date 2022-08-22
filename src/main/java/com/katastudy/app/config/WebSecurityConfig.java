@@ -1,38 +1,38 @@
 package com.katastudy.app.config;
 
-import com.katastudy.app.service.UserService;
+import com.katastudy.app.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SuccessUserHandler successUserHandler;
-    private final UserService userService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserService userService) {
-        this.successUserHandler = successUserHandler;
-        this.userService = userService;
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private SuccessUserHandler successUserHandler;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/new").permitAll()
-                .antMatchers("/admin/**").access("hasRole('ADMIN')")
-                .antMatchers("/user").access("hasAnyRole('USER', 'ADMIN')")
+                .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/userWoRole/**").not().hasAnyRole("USER", "ADMIN")
+                .antMatchers("/", "/index").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
@@ -42,16 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userService);
-        return authenticationProvider;
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
 }

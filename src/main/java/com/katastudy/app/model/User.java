@@ -1,35 +1,93 @@
 package com.katastudy.app.model;
 
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String username;
+    @Column(name = "username")
+    private String userName;
+    @Column(name = "password")
     private String password;
+    @Column(name = "name")
     private String name;
-    private String lastname;
+    @Column(name = "surname")
+    private String surname;
+    @Column(name = "email")
     private String email;
+    @Transient
+    private String passwordConfirm;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(String username, String password, String name, String surname, String email, Set<Role> roles) {
+        this.userName = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String userName) {
+        this.userName = userName;
+    }
+
+    @Override
+    public String getUsername() {
+        return userName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail () { return email ;}
+
+    public void setEmail (String email) { this.email = email ;}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -52,31 +110,19 @@ public class User implements UserDetails {
         return true;
     }
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private List<Role> roles;
-
-    public User(Long id, String username, String password, String name, String lastname, String email, List<Role> roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.roles = roles;
+    public String getPasswordConfirm() {
+        return passwordConfirm;
     }
 
-    public User(String username, String password, String name, String lastname, String email, List<Role> roles) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.roles = roles;
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
-    public User() {
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
