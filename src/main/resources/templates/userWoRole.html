@@ -8,6 +8,7 @@
 <h2>Registered user: <b th:text="${#request.userPrincipal.principal.username}"></b></h2>
 <h2>Name: <b th:text="${#request.userPrincipal.principal.name}"></b></h2>
 <h2>Surname: <b th:text="${#request.userPrincipal.principal.surname}"></b></h2>
+<h2>Email: <b th:text="${#request.userPrincipal.principal.email}"></b></h2>
 
 <a th:href="@{logout}">Logout</a>
 </body>

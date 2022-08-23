@@ -29,6 +29,10 @@ User<br /><br />
     </div>
     <br/>
     <div>
+        <label for="password" >email</label>
+        <input type="text" th:field="*{email}" id="email">
+    </div>
+    <div>
         <label >Role</label>
         <div>
             <th:block th:each="role: ${allRoles}">
