@@ -1,5 +1,6 @@
 package com.katastudy.app.model;
 
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,7 +28,13 @@ public class User implements UserDetails {
     private String passwordConfirm;
 
     @Transient
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"),
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "roles_id" }) })
     private Set<Role> roles;
 
 
