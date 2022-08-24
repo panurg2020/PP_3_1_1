@@ -63,7 +63,7 @@ public class AdminController {
     }
 
     @GetMapping("/userWoRole")
-    public String infoUserNotRole() {
+    public String infoUserWoRole() {
         return "userWoRole";
     }
 }

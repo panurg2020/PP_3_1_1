@@ -10,4 +10,9 @@ public class UserController {
     public String infoUser() {
         return "/user";
     }
+
+    @GetMapping("/userWoRole")
+    public String infoUserWoRole() {
+        return "userWoRole";
+    }
 }
