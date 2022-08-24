@@ -1,5 +1,6 @@
 package com.katastudy.app.model;
 
+
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Entity;
@@ -10,12 +11,14 @@ import java.util.Set;
 
 @Entity
 public class Role implements GrantedAuthority {
+
     @Id
     private Long id;
+
     private String name;
     @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @ManyToMany( mappedBy = "id")
+    private Set <User> users;
 
     public Role() {
     }

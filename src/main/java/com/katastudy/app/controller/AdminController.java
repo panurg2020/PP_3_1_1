@@ -62,11 +62,6 @@ public class AdminController {
         return "create";
     }
 
-    @GetMapping("/user")
-    public String infoUser() {
-        return "/user";
-    }
-
     @GetMapping("/userWoRole")
     public String infoUserNotRole() {
         return "userWoRole";

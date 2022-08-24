@@ -25,8 +25,12 @@ public class User implements UserDetails {
     private String email;
     @Transient
     private String passwordConfirm;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @Transient
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "id")
     private Set<Role> roles;
+
+
 
     public User() {
     }
@@ -116,6 +120,15 @@ public class User implements UserDetails {
 
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
+    }
+
+    public String getRolesToString() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : roles) {
+            sb.append(role.toString());
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 
     public Set<Role> getRoles() {
