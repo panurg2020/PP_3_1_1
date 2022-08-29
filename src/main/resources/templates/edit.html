@@ -1,48 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>edit</title>
+    <title>EDIT</title>
 </head>
 <body>
-User<br /><br />
-<form th:method="PUT" th:action="@{/edit/{id}(id=${user.getId()})}" th:object="${user}">
-    <input type="hidden" th:field="*{id}" id="id">
-    <div>
-    <label for="name" >Name</label>
-    <input type="text" th:field="*{name}" id="name">
-    </div>
-    <br/>
-    <div>
-    <label for="surname" >Surname</label>
-    <input type="text" th:field="*{surname}" id="surname">
-    </div>
-    <br/>
-    <div>
-        <label for="userName" >Username</label>
-    <input type="text" th:field="*{username}" id="userName">
-    </div>
-    <br/>
-    <div>
-    <label for="password" >Password</label>
-    <input type="text" th:field="*{password}" id="password">
-    </div>
-    <br/>
-    <div>
-        <label for="password" >email</label>
-        <input type="text" th:field="*{email}" id="email">
-    </div>
-    <div>
-        <label >Role</label>
-        <div>
-            <th:block th:each="role: ${allRoles}">
-                <input type="checkbox" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}" />
-            </th:block>
-        </div>
-    </div>
-    <br /><br />
-    <input type="submit" value="Save"/>
-</form>
-
+<div th:align="center">
+    <h2>Edit User</h2>
+    <form th:method="PATCH" th:action="@{/admin/{id}/update(id=${user.getId()})}" th:object="${user}">
+        <table th:border="2" th:cellpadding="15">
+            <tr>
+                <td>ID</td>
+                <td><input type="number" th:field="*{id}" readonly/>
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" th:field="*{name}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Surname</td>
+                <td><input type="text" th:field="*{surname}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" th:field="*{email}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="text" name="password"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td><input type="checkbox" name="nameRole"
+                           th:each="roles : ${roles}"
+                           th:value="${roles.name}"
+                           th:text="${roles.name}">
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit" value="Edit User"/>
+    </form>
+    <br>
+    <form th:action="@{/admin}" method="get">
+        <input type="submit" value="Back"/>
+    </form>
+    <br>
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" value="Logout"/>
+    </form>
+</div>
 </body>
 </html>

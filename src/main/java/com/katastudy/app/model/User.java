@@ -1,20 +1,28 @@
 package com.katastudy.app.model;
 
-import org.hibernate.annotations.Cascade;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String userName;
     @Column(name = "password")
     private String password;
@@ -22,83 +30,23 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "surname")
     private String surname;
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
     @Transient
     private String passwordConfirm;
 
-    @Transient
     @ManyToMany(fetch = FetchType.LAZY)
-    @Cascade(value = org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"),
-            uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "roles_id" }) })
-    private Set<Role> roles;
-
-
-
-    public User() {
-    }
-
-    public User(String username, String password, String name, String surname, String email, Set<Role> roles) {
-        this.userName = username;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.roles = roles;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String userName) {
-        this.userName = userName;
-    }
-
-    @Override
-    public String getUsername() {
-        return userName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail () { return email ;}
-
-    public void setEmail (String email) { this.email = email ;}
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
+    @Column(name = "roles")
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        return roles;
     }
 
     @Override
@@ -121,28 +69,22 @@ public class User implements UserDetails {
         return true;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
+    public String roles() {
+        String[] res = new String[]{""};
+        getRoles().forEach(role -> res[0] += role.getName());
+        return res[0];
     }
 
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
-    public String getRolesToString() {
-        StringBuilder sb = new StringBuilder();
-        for (Role role : roles) {
-            sb.append(role.toString());
-            sb.append(" ");
-        }
-        return sb.toString();
+    @Override
+    public String getUsername() {
+        return userName;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 }

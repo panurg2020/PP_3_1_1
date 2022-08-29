@@ -16,6 +16,7 @@ public class RoleServiceImpl {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public void addRole(Role role) {
         roleRepository.save(role);
     }
@@ -24,6 +25,15 @@ public class RoleServiceImpl {
     public Set<Role> getAllRoles() {
         Set<Role> roles = new HashSet<>();
         roles.addAll(roleRepository.findAll());
+        return roles;
+    }
+
+    public Set<Role> getByName(String name) {
+        Set<Role> roles = new HashSet<>();
+        for (Role role : getAllRoles()) {
+            if (name.contains(role.getName()))
+                roles.add(role);
+        }
         return roles;
     }
 }

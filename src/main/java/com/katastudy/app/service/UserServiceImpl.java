@@ -26,20 +26,20 @@ public class UserServiceImpl {
     }
 
 
+    public User getUserByName(String username) {
+
+        return userRepository.findByUserName(username);
+    }
+
+
     public List<User> allUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public boolean saveUser(User user) {
-
-        User userFromDB = userRepository.findByUserName(user.getUsername());
-        if (userFromDB != null) {
-            return true;
-        }
+    public void saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return true;
     }
 
     @Transactional
@@ -52,9 +52,12 @@ public class UserServiceImpl {
     }
 
     @Transactional
-    public void edit(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public void update(User user, Long id) {
+        user.setId(id);
+        user.setPassword(user.getPassword() != null && !user.getPassword().trim().equals("") ? bCryptPasswordEncoder
+                .encode(user.getPassword()) : userRepository.getUserById(id).getPassword());
+        user.setUsername(userRepository.getUserById(id).getUsername());
+        userRepository.saveAndFlush(user);
     }
 }
 

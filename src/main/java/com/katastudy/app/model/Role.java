@@ -1,23 +1,29 @@
 package com.katastudy.app.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
 @Entity
+@Table(name = "role")
 public class Role implements GrantedAuthority {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "name")
     private String name;
+
     @Transient
-    @ManyToMany( mappedBy = "id")
+    @ManyToMany(mappedBy = "roles")
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set <User> users;
 
     public Role() {
